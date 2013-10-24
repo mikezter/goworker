@@ -1,17 +1,19 @@
 package goworker
 
-var (
-	workers map[string]workerFunc
-)
-
-func init() {
-	workers = make(map[string]workerFunc)
+type Worker interface {
+        Work() error
 }
 
-// Registers a goworker worker function. Class refers to the
-// Ruby name of the class which enqueues the job. Worker
-// is a function which accepts a queue and an arbitrary
-// array of interfaces as arguments.
-func Register(class string, worker workerFunc) {
-	workers[class] = worker
+type workerFunc func() Worker
+
+var workers map[string]workerFunc
+
+// Registers a goworker Worker.
+// `class` refers to the Ruby name of the class which enqueues the job.
+func Register(class string, workerFunc workerFunc) {
+        workers[class] = workerFunc
+}
+
+func init() {
+        workers = make(map[string]workerFunc)
 }

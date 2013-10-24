@@ -1,6 +1,7 @@
 package goworker
 
 type job struct {
-	Queue   string
-	Payload payload
+        Queue   string
+        Payload payload
+        Raw     []byte
 }

@@ -152,5 +152,8 @@ func (w *worker) run(pool *pools.ResourcePool, job *job, workerFunc workerFunc) 
 		w.start(conn, job)
 		pool.Put(conn)
 	}
-	err = workerFunc(job.Queue, job.Payload.Args...)
+
+	worker := workerFunc()
+	json.Unmarshal(job.Raw, &worker)
+	err = worker.Work()
 }

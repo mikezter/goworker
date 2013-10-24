@@ -34,9 +34,9 @@ func (p *poller) getJob(conn *redisConn) (*job, error) {
 		if reply != nil {
 			logger.Debugf("Found job on %s", queue)
 
-			job := &job{Queue: queue}
+			job := &job{Queue: queue, Raw: reply.([]byte)}
 
-			if err := json.Unmarshal(reply.([]byte), &job.Payload); err != nil {
+			if err := json.Unmarshal(job.Raw, &job.Payload); err != nil {
 				return nil, err
 			}
 			return job, nil
